@@ -39,6 +39,9 @@ dependencies:
   path: ^1.9.1
 
 dev_dependencies:
+
+  flutter_launcher_icons: ^0.13.1
+
   flutter_test:
     sdk: flutter
 
@@ -65,6 +68,15 @@ flutter:
   assets:
     - data/produits_json.json
     - assets/placeholderImage.jpg
+    - assets/appLogo.png
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/appLogo.png
+
+
 
 
   #   - images/a_dot_burr.jpeg

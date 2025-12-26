@@ -37,6 +37,19 @@ class AppDatabase {
             note REAL
           )
         ''');
+
+        await db.execute('''
+          CREATE TABLE users (
+            id TEXT PRIMARY KEY,
+            nom TEXT,
+            prenom TEXT,
+            email TEXT,
+            telephone TEXT,
+            motDePasse TEXT,
+            imgProfile TEXT,
+          )
+          
+          ''');
       },
     );
   }
