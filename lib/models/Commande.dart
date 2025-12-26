@@ -1,5 +1,5 @@
-import 'produit.dart';
-import 'user.dart';
+import '../../models/produit.dart';
+import '../../models/user.dart';
 
 class Commande {
   // Attributs privés
@@ -16,7 +16,7 @@ class Commande {
     required List<Produit> produits,
     DateTime? date,
     String statut = 'en cours',
-  })  : _id = id,
+  }) : _id = id,
         _client = client,
         _produits = produits,
         _date = date ?? DateTime.now(),
@@ -72,3 +72,4 @@ class Commande {
     return 'Commande(id: $_id, client: ${_client.getNomComplet()}, produits: $_produits, total: $total, statut: $_statut, date: $_date)';
   }
 }
+

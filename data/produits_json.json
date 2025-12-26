@@ -1,0 +1,602 @@
+[
+    {
+        "id": "p01",
+        "name": "iPhone 15 Pro",
+        "categorie": "Téléphones",
+        "description": "Smartphone Apple avec écran Super Retina XDR et processeur A17 Pro.",
+        "price": 805000,
+        "imageUrl": "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/iphone_15_pro.png",
+        "quantite": 25,
+        "note": 4.8
+    },
+    {
+        "id": "p02",
+        "name": "Samsung Galaxy S24 Ultra",
+        "categorie": "Téléphones",
+        "description": "Téléphone Android avec appareil photo 200MP et stylet intégré.",
+        "price": 884000,
+        "imageUrl": "https://m.media-amazon.com/images/I/61VLy48f5VL._AC_SL1200_.jpg",
+        "quantite": 18,
+        "note": 4.7
+    },
+    {
+        "id": "p03",
+        "name": "Xiaomi Redmi Note 13 Pro",
+        "categorie": "Téléphones",
+        "description": "Smartphone milieu de gamme avec écran AMOLED 120Hz et charge rapide.",
+        "price": 229000,
+        "imageUrl": "https://bizweb.dktcdn.net/thumb/1024x1024/100/506/962/products/redmi-note-13-pro-4g-xanh-0c1d2babfd034aec8bdec85399a80b10.webp?v=1710511446250",
+        "quantite": 40,
+        "note": 4.3
+    },
+    {
+        "id": "p04",
+        "name": "MacBook Air M3",
+        "categorie": "Ordinateurs",
+        "description": "Ordinateur portable Apple ultra-léger avec puce M3 et autonomie de 18h.",
+        "price": 852000,
+        "imageUrl": "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/mba_15_m3_2024_hero.png",
+        "quantite": 12,
+        "note": 4.9
+    },
+    {
+        "id": "p05",
+        "name": "Dell XPS 15",
+        "categorie": "Ordinateurs",
+        "description": "PC portable avec écran InfinityEdge et processeur Intel Core i9.",
+        "price": 1245000,
+        "imageUrl": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/xps-notebooks/xps-15-9530/media-gallery/touch-black/notebook-xps-15-9530-t-black-gallery-1.psd?fmt=png-alpha&pscan=auto&scl=1&wid=3778&hei=2323&qlt=100,1&resMode=sharp2&size=3778,2323&chrss=full&imwidth=5000",
+        "quantite": 8,
+        "note": 4.6
+    },
+    {
+        "id": "p06",
+        "name": "Asus ROG Zephyrus",
+        "categorie": "Ordinateurs",
+        "description": "PC gaming avec RTX 4070 et écran 165Hz.",
+        "price": 1442000,
+        "imageUrl": "https://dlcdnwebimgs.asus.com/gain/98CFBC81-28F0-4C12-A30B-3E605B30CF3B/fwebp/fwebp",
+        "quantite": 5,
+        "note": 4.5
+    },
+    {
+        "id": "p07",
+        "name": "Casque Sony WH-1000XM5",
+        "categorie": "Accessoires",
+        "description": "Casque audio sans fil avec réduction de bruit active.",
+        "price": 216000,
+        "imageUrl": "https://m.media-amazon.com/images/I/61eAWWP7DuL._AC_SX679_.jpg",
+        "quantite": 35,
+        "note": 4.8
+    },
+    {
+        "id": "p08",
+        "name": "Souris Logitech MX Master 3S",
+        "categorie": "Accessoires",
+        "description": "Souris ergonomique sans fil pour productivité.",
+        "price": 65500,
+        "imageUrl": "https://sf2.cnetfrance.fr/wp-content/uploads/cnet/2023/05/logitech-mx-master-3s-1200-750x410.jpg",
+        "quantite": 50,
+        "note": 4.7
+    },
+    {
+        "id": "p09",
+        "name": "OnePlus 12",
+        "categorie": "Téléphones",
+        "description": "Smartphone avec charge 100W et Snapdragon 8 Gen 3.",
+        "price": 590000,
+        "imageUrl": "https://oasis.opstatics.com/content/dam/oasis/page/2023/cn/12/12-green.png",
+        "quantite": 22,
+        "note": 4.4
+    },
+    {
+        "id": "p10",
+        "name": "Google Pixel 8 Pro",
+        "categorie": "Téléphones",
+        "description": "Téléphone avec appareil photo IA et Android pur.",
+        "price": 655000,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/56039-google-pixel-8-pro.jpg",
+        "quantite": 15,
+        "note": 4.5
+    },
+    {
+        "id": "p11",
+        "name": "Huawei P60 Pro",
+        "categorie": "Téléphones",
+        "description": "Smartphone avec objectif téléphoto variable et écran LTPO.",
+        "price": 721000,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/49499-huawei-p60-pro.jpg",
+        "quantite": 10,
+        "note": 4.2
+    },
+    {
+        "id": "p12",
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "categorie": "Ordinateurs",
+        "description": "PC portable professionnel avec clavier rétroéclairé.",
+        "price": 1114000,
+        "imageUrl": "https://p1-ofp.static.pub/medias/bWFzdGVyfHJvb3R8Mjk0NzU4fGltYWdlL3BuZ3xoYTIvaDZjLzE0NDQ3MTYzNzM2MDk0LnBuZ3xiMThiNWJlY2NjODExN2U0M2E4ZDE2NGNmMTM2NTExMWZkNzYwMzE4YTBmNDE5YzFiNThhODc2ZDEzYTMwZWQ5/lenovo-laptops-x1-carbon-6th-gen-hero.png?width=400&height=400",
+        "quantite": 9,
+        "note": 4.6
+    },
+    {
+        "id": "p13",
+        "name": "HP Spectre x360",
+        "categorie": "Ordinateurs",
+        "description": "Convertible 2-en-1 avec écran tactile OLED.",
+        "price": 983000,
+        "imageUrl": "https://sf1.cnetfrance.fr/wp-content/uploads/cnet/2023/05/hp-spectre-x360-770x577-1-750x410.jpg",
+        "quantite": 11,
+        "note": 4.4
+    },
+    {
+        "id": "p14",
+        "name": "Acer Swift 3",
+        "categorie": "Ordinateurs",
+        "description": "PC portable léger avec processeur AMD Ryzen 7.",
+        "price": 491000,
+        "imageUrl": "https://sf1.cnetfrance.fr/wp-content/uploads/cnet/2023/05/acer-swift-3-ryzen-2020-big-750x410.jpg",
+        "quantite": 20,
+        "note": 4.1
+    },
+    {
+        "id": "p15",
+        "name": "Clavier Mécanique Keychron K2",
+        "categorie": "Accessoires",
+        "description": "Clavier Bluetooth mécanique avec rétroéclairage RGB.",
+        "price": 52400,
+        "imageUrl": "https://usercontent.one/wp/www.geeketc.fr/wp-content/uploads/2023/01/uml-1536x1024.jpg",
+        "quantite": 45,
+        "note": 4.6
+    },
+    {
+        "id": "p16",
+        "name": "Disque SSD Externe Samsung T7",
+        "categorie": "Accessoires",
+        "description": "SSD externe 1TB avec vitesse de transfert 1050MB/s.",
+        "price": 59000,
+        "imageUrl": "https://media.ldlc.com/r705/ld/products/00/05/95/03/LD0005950357.jpg",
+        "quantite": 60,
+        "note": 4.8
+    },
+    {
+        "id": "p17",
+        "name": "PowerBank Anker 335",
+        "categorie": "Accessoires",
+        "description": "Batterie externe 20000mAh avec charge rapide PD.",
+        "price": 32750,
+        "imageUrl": "https://cdn.ploonk.fr/UwFJS59j6u2KyGjzZFljXkozD7a6L9NK1IwdIKmn804/rs:fit:1200:1200/czM6Ly9wbG9vbmstbWFnZW50by1jZG4tcHJvZHVjdGlvbi12Mi9tZWRpYS9jYXRhbG9nL3Byb2R1Y3QvMS85LzE5NDY0NDE0OTE5Ml92b29yYWFuemljaHRfeF8xXzU1OTkuanBn",
+        "quantite": 75,
+        "note": 4.5
+    },
+    {
+        "id": "p18",
+        "name": "Motorola Edge 40",
+        "categorie": "Téléphones",
+        "description": "Smartphone avec écran pOLED 144Hz et charge 68W.",
+        "price": 393000,
+        "imageUrl": "https://motorolain.vtexassets.com/arquivos/ids/158550-1200-auto?width=1200&height=auto&aspect=true",
+        "quantite": 30,
+        "note": 4.0
+    },
+    {
+        "id": "p19",
+        "name": "Samsung Galaxy A54",
+        "categorie": "Téléphones",
+        "description": "Téléphone entrée de gamme avec écran Super AMOLED.",
+        "price": 262000,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/48613-samsung-galaxy-a54.jpg",
+        "quantite": 55,
+        "note": 4.2
+    },
+    {
+        "id": "p20",
+        "name": "iPhone SE (3ème génération)",
+        "categorie": "Téléphones",
+        "description": "Compact, avec processeur A15 Bionic et 5G.",
+        "price": 347000,
+        "imageUrl": "https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111866_sp867-iphone-se-3gen.png",
+        "quantite": 28,
+        "note": 4.3
+    },
+    {
+        "id": "p21",
+        "name": "MSI Stealth 14 Studio",
+        "categorie": "Ordinateurs",
+        "description": "PC portable gaming fin avec RTX 4060.",
+        "price": 1180000,
+        "imageUrl": "https://storage-asset.msi.com/global/picture/image/feature/nb/2022_RPL/stealth_14_A13/msi-stealth14-kv-white.png",
+        "quantite": 6,
+        "note": 4.5
+    },
+    {
+        "id": "p22",
+        "name": "Microsoft Surface Laptop 5",
+        "categorie": "Ordinateurs",
+        "description": "Laptop avec écran PixelSense et Windows 11.",
+        "price": 852000,
+        "imageUrl": "https://sf1.cnetfrance.fr/wp-content/uploads/cnet/2023/06/surface-laptop-5-1200-750x410.jpg",
+        "quantite": 14,
+        "note": 4.4
+    },
+    {
+        "id": "p23",
+        "name": "Apple MacBook Pro 16",
+        "categorie": "Ordinateurs",
+        "description": "Puissant avec M3 Max et écran Liquid Retina XDR.",
+        "price": 2294000,
+        "imageUrl": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mbp16-spaceblack-select-202410?wid=904&hei=840&fmt=jpeg&qlt=90&.v=Nys1UFFBTmI1T0VnWWNyeEZhdDFYamhTSEZFNjlmT2xUUDNBTjljV1BxWVk4UDMvOWNCVUEyZk1VN2FtQlpZWXZvdUZlR0V0VUdJSjBWaDVNVG95YlBROXI4TlIyY1pzUUZwNVlXcEFNb2c",
+        "quantite": 4,
+        "note": 4.9
+    },
+    {
+        "id": "p24",
+        "name": "Haut-parleur JBL Flip 6",
+        "categorie": "Accessoires",
+        "description": "Enceinte Bluetooth portable étanche.",
+        "price": 85200,
+        "imageUrl": "https://fr.jbl.com/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw4e91d6eb/1_JBL_FLIP6_HERO_BLACK_29391_x2.png?sw=453&sh=453",
+        "quantite": 40,
+        "note": 4.5
+    },
+    {
+        "id": "p25",
+        "name": "Écran Samsung 27\" 4K",
+        "categorie": "Accessoires",
+        "description": "Moniteur IPS avec HDR10 et port USB-C.",
+        "price": 229000,
+        "imageUrl": "https://images.samsung.com/is/image/samsung/p6pim/fr/ls27d800uauxen/gallery/fr-viewfinity-s827s80ud-32s80ud-ls27d800uauxen-541608378?$720_576_JPG$",
+        "quantite": 12,
+        "note": 4.7
+    },
+    {
+        "id": "p26",
+        "name": "Webcam Logitech C920",
+        "categorie": "Accessoires",
+        "description": "Webcam HD 1080p avec micro intégré.",
+        "price": 45800,
+        "imageUrl": "https://resource.logitech.com/w_544,h_466,ar_7:6,c_pad,q_auto,f_auto,dpr_2.0/d_transparent.gif/content/dam/logitech/en/products/webcams/c920/gallery/c920-gallery-1.png",
+        "quantite": 65,
+        "note": 4.4
+    },
+    {
+        "id": "p27",
+        "name": "Nokia G50",
+        "categorie": "Téléphones",
+        "description": "Smartphone abordable avec 5G et batterie longue durée.",
+        "price": 196500,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2021/09/nokia-g50-frandroid-2021-768x768.png?webp=1&resize=580,580&key=b2ff5638",
+        "quantite": 35,
+        "note": 3.9
+    },
+    {
+        "id": "p28",
+        "name": "Sony Xperia 1 V",
+        "categorie": "Téléphones",
+        "description": "Téléphone avec capteur photo Exmor T et écran 4K.",
+        "price": 917000,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2023/05/sony-xperia-1-v-frandroid-2023-768x768.png?webp=1&key=10a2023f",
+        "quantite": 9,
+        "note": 4.6
+    },
+    {
+        "id": "p29",
+        "name": "Realme GT Neo 5",
+        "categorie": "Téléphones",
+        "description": "Charge 240W et écran AMOLED 144Hz.",
+        "price": 327500,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/47415-realme-gt-neo-5.jpg",
+        "quantite": 25,
+        "note": 4.3
+    },
+    {
+        "id": "p30",
+        "name": "Razer Blade 15",
+        "categorie": "Ordinateurs",
+        "description": "PC gaming avec écran QHD 240Hz.",
+        "price": 1638000,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2021/01/razer-blade-15-2021-frandroid-2021-768x768.png?webp=1&resize=580,580&key=c8c5bdfa",
+        "quantite": 7,
+        "note": 4.7
+    },
+    {
+        "id": "p31",
+        "name": "LG Gram 17",
+        "categorie": "Ordinateurs",
+        "description": "Laptop ultra-léger 17 pouces avec autonomie longue.",
+        "price": 1180000,
+        "imageUrl": "https://www.lg.com/content/dam/channel/wcms/ca_fr/business/produits-informatiques/ordinateurs-portables/ordinateurs-portables-gram-lg-17-pouces/banners/17LGGram_768x1080.jpg",
+        "quantite": 10,
+        "note": 4.5
+    },
+    {
+        "id": "p32",
+        "name": "Framework Laptop 13",
+        "categorie": "Ordinateurs",
+        "description": "PC portable modulaire et réparable.",
+        "price": 688000,
+        "imageUrl": "https://images.prismic.io/frameworkmarketplace/98dff714-dd17-4be9-82f9-f4cba9f988d9_Framework+Laptop+13+blog+post.png?auto=compress,format",
+        "quantite": 15,
+        "note": 4.8
+    },
+    {
+        "id": "p33",
+        "name": "Casque Gaming SteelSeries Arctis 7",
+        "categorie": "Accessoires",
+        "description": "Casque sans fil avec son surround DTS.",
+        "price": 98300,
+        "imageUrl": "https://www.ouagadougou.online/wp-content/uploads/2021/11/71cIxP7E2-L._AC_UL320_-600x600.jpg",
+        "quantite": 30,
+        "note": 4.6
+    },
+    {
+        "id": "p34",
+        "name": "Station d'accueil CalDigit TS4",
+        "categorie": "Accessoires",
+        "description": "Dock Thunderbolt 4 avec 18 ports.",
+        "price": 262000,
+        "imageUrl": "https://us.caldigit.com/cdn/shop/products/TS4_VerticalRightFrontView_WhiteBG.jpg?v=1671680649&width=1346",
+        "quantite": 8,
+        "note": 4.9
+    },
+    {
+        "id": "p35",
+        "name": "Câble USB-C Anker 100W",
+        "categorie": "Accessoires",
+        "description": "Câble de charge et données 2m, nylon tressé.",
+        "price": 13100,
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0493/9834/9974/files/1_d19b5c52-60a8-4155-acdf-073e64f6d434_1534x.png?v=1763545234",
+        "quantite": 200,
+        "note": 4.7
+    },
+    {
+        "id": "p36",
+        "name": "Oppo Find X6 Pro",
+        "categorie": "Téléphones",
+        "description": "Appareil photo triple avec capteur 1 pouce.",
+        "price": 786000,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/49393-oppo-find-x6-pro.jpg",
+        "quantite": 12,
+        "note": 4.4
+    },
+    {
+        "id": "p37",
+        "name": "Nothing Phone (2)",
+        "categorie": "Téléphones",
+        "description": "Design transparent avec Glyph Interface.",
+        "price": 458500,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2023/07/nothing-phone-2-frandroid-2023-768x768.png?webp=1&key=2f23a600",
+        "quantite": 22,
+        "note": 4.3
+    },
+    {
+        "id": "p38",
+        "name": "Asus Zenfone 10",
+        "categorie": "Téléphones",
+        "description": "Compact avec Snapdragon 8 Gen 2 et 144Hz.",
+        "price": 524000,
+        "imageUrl": "https://dlcdnwebimgs.asus.com/gain/5f4839ec-a8ae-4254-aac3-0a21a7fae438/w800/fwebp",
+        "quantite": 18,
+        "note": 4.5
+    },
+    {
+        "id": "p39",
+        "name": "Alienware m18",
+        "categorie": "Ordinateurs",
+        "description": "Gaming avec écran 18 pouces et processeur i9.",
+        "price": 1900000,
+        "imageUrl": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/alienware-notebooks/alienware-m18-mlk/media-gallery/hd/laptop-alienware-m18-r2-hd-perkey-intel-bk-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=320&wid=416&qlt=100,1&resMode=sharp2&size=416,320&chrss=full",
+        "quantite": 3,
+        "note": 4.6
+    },
+    {
+        "id": "p40",
+        "name": "Apple iMac 24\" M3",
+        "categorie": "Ordinateurs",
+        "description": "Ordinateur tout-en-un avec écran 4.5K.",
+        "price": 983000,
+        "imageUrl": "https://www.apple.com/v/imac/v/images/overview/highlights/highlights_design_endframe__cf4hroyqtgly_small_2x.jpg",
+        "quantite": 9,
+        "note": 4.8
+    },
+    {
+        "id": "p41",
+        "name": "Acer Chromebook Spin 714",
+        "categorie": "Ordinateurs",
+        "description": "Chromebook convertible avec stylet inclus.",
+        "price": 458500,
+        "imageUrl": "https://images.acer.com/is/image/acer/ksp01-the%20power%20to%20perform_5000x2800-1:Static-KSP-Image-Right-Left-M1",
+        "quantite": 20,
+        "note": 4.2
+    },
+    {
+        "id": "p42",
+        "name": "Souris Gaming Razer DeathAdder V3",
+        "categorie": "Accessoires",
+        "description": "Souris ergonomique avec capteur optique 30K DPI.",
+        "price": 45850,
+        "imageUrl": "https://assets2.razerzone.com/images/pnx.assets/57f749b949dd030d0865f29c20f46043/razer-deathadder-v3-no-weight-and-drag.webp",
+        "quantite": 55,
+        "note": 4.7
+    },
+    {
+        "id": "p43",
+        "name": "Disque Dur Externe WD My Passport 4TB",
+        "categorie": "Accessoires",
+        "description": "HDD externe portable avec chiffrement matériel.",
+        "price": 78600,
+        "imageUrl": "https://m.media-amazon.com/images/I/51lQ0bnCKtL._AC_SX679_.jpg",
+        "quantite": 25,
+        "note": 4.4
+    },
+    {
+        "id": "p44",
+        "name": "Chargeur MagSafe Apple",
+        "categorie": "Accessoires",
+        "description": "Chargeur magnétique 15W pour iPhone.",
+        "price": 26200,
+        "imageUrl": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/HRXD2?wid=890&hei=890&fmt=jpeg&qlt=90&.v=eFhqWjQwb1RjcndSTDZGYlpaWUNmb3ExblZJSGFXSFVPMUE2c2RxMy8rSzdQQnhDRDg0L3p2bzNQc1owZGY1SU9JekIwcmUrS3V1Vk5iU2YwY0NEMkE",
+        "quantite": 90,
+        "note": 4.5
+    },
+    {
+        "id": "p45",
+        "name": "Honor Magic 5 Pro",
+        "categorie": "Téléphones",
+        "description": "Batterie 5100mAh avec caméra triple avancée.",
+        "price": 720500,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2023/02/honor-magic-5-pro-frandroid-2023-768x768.png?webp=1&key=1eedf001",
+        "quantite": 14,
+        "note": 4.4
+    },
+    {
+        "id": "p46",
+        "name": "Google Pixel 7a",
+        "categorie": "Téléphones",
+        "description": "Smartphone économique avec Tensor G2.",
+        "price": 327500,
+        "imageUrl": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2023/05/google-pixel-7a-frandroid-2023-1-768x768.png?webp=1&key=6f28dc03",
+        "quantite": 32,
+        "note": 4.3
+    },
+    {
+        "id": "p47",
+        "name": "Samsung Galaxy Z Flip5",
+        "categorie": "Téléphones",
+        "description": "Smartphone pliable avec écran couverture personnalisable.",
+        "price": 655000,
+        "imageUrl": "https://images.samsung.com/africa_fr/smartphones/galaxy-z-flip6/images/galaxy-z-flip6-features-kv-mo.jpg?imbypass=true",
+        "quantite": 11,
+        "note": 4.2
+    },
+    {
+        "id": "p48",
+        "name": "Lenovo Legion Pro 7",
+        "categorie": "Ordinateurs",
+        "description": "Gaming avec refroidissement avancé et écran 240Hz.",
+        "price": 1507000,
+        "imageUrl": "https://p3-ofp.static.pub/fes/cms/2023/03/06/ffbeevxj0xpbedc7x2tvr8qblpd7bd631388.png",
+        "quantite": 6,
+        "note": 4.6
+    },
+    {
+        "id": "p49",
+        "name": "Dell Inspiron 14",
+        "categorie": "Ordinateurs",
+        "description": "Laptop polyvalent avec écran tactile FHD.",
+        "price": 524000,
+        "imageUrl": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/14-5440/media-gallery/ice-blue-plastic/notebook-inspiron-14-5440-ice-blue-plastic-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=320&wid=403&qlt=100,1&resMode=sharp2&size=403,320&chrss=full",
+        "quantite": 25,
+        "note": 4.1
+    },
+    {
+        "id": "p50",
+        "name": "Microsoft Surface Pro 9",
+        "categorie": "Ordinateurs",
+        "description": "Tablette PC avec clavier détachable et stylet.",
+        "price": 852000,
+        "imageUrl": "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/PDP-Highlight-Consumer-Pro-9-Platinum-001:VP2-859x540",
+        "quantite": 13,
+        "note": 4.5
+    },
+    {
+        "id": "p51",
+        "name": "Adaptateur USB-C vers HDMI",
+        "categorie": "Accessoires",
+        "description": "Adaptateur 4K 60Hz pour présentation et divertissement.",
+        "price": 19650,
+        "imageUrl": "https://m.media-amazon.com/images/I/816PCuuj52L._SX522_.jpg",
+        "quantite": 120,
+        "note": 4.3
+    },
+    {
+        "id": "p52",
+        "name": "Clavier Apple Magic Keyboard",
+        "categorie": "Accessoires",
+        "description": "Clavier sans fil avec pavé numérique et Touch ID.",
+        "price": 98300,
+        "imageUrl": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MXCL3F?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=ZGE3U0pyTE12SnBiSlFmV2paQ1NVekxJNzJtbW9WRzBUckZ4SDR0aldyMFY0ZGtxRm5nMGhUUUYyQ1NONFVVUldxQjVIMkNDNkllSEQrdk8rbTlaZXc",
+        "quantite": 35,
+        "note": 4.6
+    },
+    {
+        "id": "p53",
+        "name": "Écouteurs Beats Fit Pro",
+        "categorie": "Accessoires",
+        "description": "Écouteurs intra-auriculaires avec réduction de bruit.",
+        "price": 131000,
+        "imageUrl": "https://m.media-amazon.com/images/I/41se03x19gL._AC_SX679_.jpg",
+        "quantite": 40,
+        "note": 4.5
+    },
+    {
+        "id": "p54",
+        "name": "Vivo X100 Pro",
+        "categorie": "Téléphones",
+        "description": "Collaboration Zeiss, avec puce MediaTek Dimensity 9300.",
+        "price": 753000,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/56929-vivo-x100-pro.jpg",
+        "quantite": 10,
+        "note": 4.5
+    },
+    {
+        "id": "p55",
+        "name": "TCL 40R 5G",
+        "categorie": "Téléphones",
+        "description": "Smartphone abordable avec écran NXTVISION.",
+        "price": 163800,
+        "imageUrl": "https://cdn.kalvo.com/uploads/img/large/44339-tcl-40r.jpg",
+        "quantite": 50,
+        "note": 3.8
+    },
+    {
+        "id": "p56",
+        "name": "Apple Mac Mini M2 Pro",
+        "categorie": "Ordinateurs",
+        "description": "Mini PC puissant pour station de travail.",
+        "price": 852000,
+        "imageUrl": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/refurb-mac-mini-pro-202303?wid=2000&hei=2000&fmt=jpeg&qlt=90&.v=MUZqZ3JUM0g1Wk9tcDV3bml3ODVUZEFiQW9keDlCUk9yWnRTUFp6SXJxckZ4YVJzTmJNbnE2MnhRM01WRWhTR014MXJScFRZN3Y5OWZsRXVrN1k4cFMzVnVXdStJajRJdGlxYjRBK20rTXc",
+        "quantite": 11,
+        "note": 4.8
+    },
+    {
+        "id": "p57",
+        "name": "Asus Vivobook S 15",
+        "categorie": "Ordinateurs",
+        "description": "Laptop coloré avec processeur Intel Evo.",
+        "price": 590000,
+        "imageUrl": "https://dlcdnwebimgs.asus.com/files/media/5ef14773-fa9d-4e4c-9085-434b7ec5f3ff/v1.1/features/images/scale/50p/2x/s1/kv_main.webp",
+        "quantite": 18,
+        "note": 4.2
+    },
+    {
+        "id": "p58",
+        "name": "Tapis de Souris Gaming XXL",
+        "categorie": "Accessoires",
+        "description": "Tapis 900x400mm avec surface micro-texturée.",
+        "price": 22900,
+        "imageUrl": "https://m.media-amazon.com/images/I/81gaZYU06eL._AC_UL640_FMwebp_QL65_.jpg",
+        "quantite": 80,
+        "note": 4.4
+    },
+    {
+        "id": "p59",
+        "name": "Hub USB-C 7-en-1",
+        "categorie": "Accessoires",
+        "description": "Ports HDMI, USB-A, Ethernet, SD et charge PD.",
+        "price": 32750,
+        "imageUrl": "https://m.media-amazon.com/images/I/612PUVNUflL._AC_SX679_.jpg",
+        "quantite": 60,
+        "note": 4.5
+    },
+    {
+        "id": "p60",
+        "name": "Écran portable Asus ZenScreen 15.6\"",
+        "categorie": "Accessoires",
+        "description": "Moniteur portable USB-C avec étui intégré.",
+        "price": 163800,
+        "imageUrl": "https://www.asus.com/media/global/products/jWHG2tX08yMOj2wn/P_setting_xxx_0_90_end_692.png",
+        "quantite": 15,
+        "note": 4.6
+    }
+]
