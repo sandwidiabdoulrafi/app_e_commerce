@@ -8,6 +8,7 @@ class PanierProduitEntity {
   final String imageUrl;
   final int quantite;
   final double note;
+  final String description;
 
   PanierProduitEntity({
     required this.id,
@@ -19,6 +20,7 @@ class PanierProduitEntity {
     required this.imageUrl,
     required this.quantite,
     required this.note,
+    required this.description,
   });
 
   Map<String, dynamic> toMap() => {
@@ -31,6 +33,7 @@ class PanierProduitEntity {
         'imageUrl': imageUrl,
         'quantite': quantite,
         'note': note,
+        'description': description, 
       };
 
   factory PanierProduitEntity.fromMap(Map<String, dynamic> map) {
@@ -44,6 +47,7 @@ class PanierProduitEntity {
       imageUrl: map['imageUrl'],
       quantite: map['quantite'],
       note: map['note'],
+      description: map['description'],
     );
   }
 }

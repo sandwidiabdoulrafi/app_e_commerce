@@ -3,19 +3,18 @@ import 'package:path/path.dart';
 
 class AppDatabase {
   static Database? _db;
-
+  
   static Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await _initDB();
     return _db!;
   }
-
+  
   static Future<Database> _initDB() async {
     final path = join(await getDatabasesPath(), 'app.db');
-
     return openDatabase(
       path,
-      version: 1,
+      version: 2, // ← CHANGÉ : version 2 au lieu de 1
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE panier (
@@ -23,7 +22,7 @@ class AppDatabase {
             created_at INTEGER
           )
         ''');
-
+        
         await db.execute('''
           CREATE TABLE panier_produit (
             id TEXT PRIMARY KEY,
@@ -34,10 +33,11 @@ class AppDatabase {
             price REAL,
             imageUrl TEXT,
             quantite INTEGER,
-            note REAL
+            note REAL,
+            description TEXT
           )
         ''');
-
+        
         await db.execute('''
           CREATE TABLE users (
             id TEXT PRIMARY KEY,
@@ -46,10 +46,17 @@ class AppDatabase {
             email TEXT,
             telephone TEXT,
             motDePasse TEXT,
-            imgProfile TEXT,
+            imgProfile TEXT
           )
-          
+        ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Migration pour ajouter la colonne description si elle n'existe pas
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE panier_produit ADD COLUMN description TEXT
           ''');
+        }
       },
     );
   }

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:app_e_commerce/models/produit.dart';
+import 'package:app_e_commerce/models/panier_produit_entity.dart';
+import 'package:app_e_commerce/services/panier_service.dart';
+import 'package:app_e_commerce/widgets/marketplace/cart_item_widget.dart';
+import 'package:app_e_commerce/widgets/marketplace/cart_summary_widget.dart';
+import 'package:app_e_commerce/widgets/marketplace/empty_cart_widget.dart';
 
 class PanierScreen extends StatefulWidget {
   const PanierScreen({super.key});
@@ -8,15 +14,169 @@ class PanierScreen extends StatefulWidget {
 }
 
 class _PanierScreenState extends State<PanierScreen> {
+  final PanierService _panierService = PanierService();
+  List<Produit> _produitsPanier = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _chargerPanier();
+  }
+
+  Future<void> _chargerPanier() async {
+    setState(() => _loading = true);
+
+    try {
+      // Récupère la liste de PanierProduitEntity depuis le service
+      final List<PanierProduitEntity> panierProduits = await _panierService.getPanier();
+
+      if (mounted) {
+        setState(() {
+          // Conversion de PanierProduitEntity en Produit
+          _produitsPanier = panierProduits.map((p) => Produit(
+                id: p.produitId,
+                name: p.name,
+                categorie: p.categorie,
+                description: p.description, // Remplir si tu as la description dans le service
+                price: p.price,
+                imageUrl: p.imageUrl,
+                quantite: p.quantite,
+                note: p.note,
+              )).toList();
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loading = false);
+        _afficherMessage('Erreur lors du chargement du panier');
+      }
+    }
+  }
+
+  Future<void> _viderPanier() async {
+    final confirme = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text('Vider le panier'),
+        content: const Text(
+          'Êtes-vous sûr de vouloir supprimer tous les articles du panier ?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Vider'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirme == true) {
+      try {
+        await _panierService.viderPanier();
+        await _chargerPanier();
+        _afficherMessage('Panier vidé avec succès');
+      } catch (e) {
+        _afficherMessage('Erreur lors de la suppression');
+      }
+    }
+  }
+
+  void _passerCommande() {
+    if (_produitsPanier.isEmpty) {
+      _afficherMessage('Votre panier est vide');
+      return;
+    }
+
+    // Pour l'instant, juste un message
+    _afficherMessage('Fonctionnalité en cours de développement...');
+  }
+
+  void _afficherMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Panier'),
+        title: const Text('Mon Panier'),
+        actions: [
+          if (_produitsPanier.isNotEmpty)
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${_produitsPanier.length} article${_produitsPanier.length > 1 ? 's' : ''}',
+                  style: TextStyle(
+                    color: theme.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+          if (_produitsPanier.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_sweep_outlined),
+              onPressed: _viderPanier,
+              tooltip: 'Vider le panier',
+            ),
+        ],
       ),
-      body: const Center(
-        child: Text('Produits ajoutés au panier'),
-      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _produitsPanier.isEmpty
+              ? EmptyCartWidget(
+                  onContinuerAchats: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: _chargerPanier,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(top: 8, bottom: 16),
+                          itemCount: _produitsPanier.length,
+                          itemBuilder: (context, index) {
+                            final produit = _produitsPanier[index];
+                            return CartItemWidget(
+                              produit: produit,
+                              onUpdate: _chargerPanier,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    CartSummaryWidget(
+                      produits: _produitsPanier,
+                      onCommander: _passerCommande,
+                    ),
+                  ],
+                ),
     );
   }
 }

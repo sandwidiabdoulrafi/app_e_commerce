@@ -18,6 +18,7 @@ class PanierService {
       imageUrl: produit.imageUrl,
       quantite: 1,
       note: produit.note,
+      description: produit.description,
     );
 
     await _dao.insertProduit(panierProduit);
@@ -63,6 +64,7 @@ class PanierService {
         imageUrl: produitPanier.imageUrl,
         quantite: quantite,
         note: produitPanier.note,
+        description: produitPanier.description,
       );
 
       await _dao.insertProduit(updated);
@@ -98,6 +100,7 @@ class PanierService {
         imageUrl: produitPanier.imageUrl,
         quantite: produitPanier.quantite + 1,
         note: produitPanier.note,
+        description: produitPanier.description,
       );
 
       await _dao.insertProduit(updated);
