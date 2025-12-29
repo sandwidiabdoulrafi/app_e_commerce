@@ -10,7 +10,12 @@ import 'package:app_e_commerce/services/panier_service.dart';
 import 'package:app_e_commerce/services/commade_service.dart';
 
 class PanierScreen extends StatefulWidget {
-  const PanierScreen({super.key});
+  final VoidCallback? onRetourMarketplace; // ← AJOUTÉ
+
+  const PanierScreen({
+    super.key,
+    this.onRetourMarketplace, // ← AJOUTÉ
+  });
 
   @override
   State<PanierScreen> createState() => _PanierScreenState();
@@ -32,9 +37,8 @@ class _PanierScreenState extends State<PanierScreen> {
     setState(() => _loading = true);
 
     try {
-      // Récupère la liste de PanierProduitEntity depuis le service
-      final List<PanierProduitEntity> panierProduits = await _panierService
-          .getPanier();
+      final List<PanierProduitEntity> panierProduits =
+          await _panierService.getPanier();
 
       if (mounted) {
         setState(() {
@@ -91,23 +95,19 @@ class _PanierScreenState extends State<PanierScreen> {
     }
 
     try {
-      // Récupérer l'utilisateur connecté (exemple avec ID)
       final User? client = await UserService().getUtilisateurParId('12345');
       if (client == null) {
         _afficherMessage('Utilisateur non trouvé. Veuillez vous connecter.');
         return;
       }
 
-      // Récupérer le panier complet
       final panier = await _panierService.getPanierComplet();
 
-      // Créer la commande
       await commandeService.creerCommandeDepuisPanier(
         client: client,
         panier: panier,
       );
 
-      // Recharger le panier après la commande
       await _panierService.viderPanier();
       setState(() => _produitsPanier.clear());
 
@@ -164,43 +164,33 @@ class _PanierScreenState extends State<PanierScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _produitsPanier.isEmpty
-          ? EmptyCartWidget(
-              onContinuerAchats: () {
-                onPressed:
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MarketplaceScreen(),
+              ? EmptyCartWidget(
+                  onContinuerAchats: widget.onRetourMarketplace, // ← CORRIGÉ
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: _chargerPanier,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(top: 8, bottom: 16),
+                          itemCount: _produitsPanier.length,
+                          itemBuilder: (context, index) {
+                            final produit = _produitsPanier[index];
+                            return CartItemWidget(
+                              produit: produit,
+                              onUpdate: _chargerPanier,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  );
-                };
-              },
-            )
-          : Column(
-              children: [
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _chargerPanier,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(top: 8, bottom: 16),
-                      itemCount: _produitsPanier.length,
-                      itemBuilder: (context, index) {
-                        final produit = _produitsPanier[index];
-                        return CartItemWidget(
-                          produit: produit,
-                          onUpdate: _chargerPanier,
-                        );
-                      },
+                    CartSummaryWidget(
+                      produits: _produitsPanier,
+                      onCommander: _passerCommande,
                     ),
-                  ),
+                  ],
                 ),
-                CartSummaryWidget(
-                  produits: _produitsPanier,
-                  onCommander: _passerCommande,
-                ),
-              ],
-            ),
     );
   }
 }

@@ -36,9 +36,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
-
   late UserDao userDao;
   User? user;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -48,7 +48,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> initUser() async {
     userDao = UserDao();
-
     User tempUser = User(
       id: '12345',
       nom: 'Sandwidi',
@@ -59,24 +58,36 @@ class _HomePageState extends State<HomePage> {
       imgProfile:
           'https://lefaso.net/local/cache-vignettes/L680xH384/arton115709-00e9c.jpg?1762806111',
     );
-
     User result = await userDao.insertIfNotExistElseReturnUser(tempUser);
-
     setState(() {
       user = result;
+      _loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final List<Widget> screens = [
       const MarketplaceScreen(),
-      const PanierScreen(),
+      PanierScreen(
+        onRetourMarketplace: () {
+          setState(() {
+            _pageIndex = 0; // ← Revenir à la page Marketplace
+          });
+        },
+      ), // ← MODIFIÉ : Ajout du callback
       const CommandeScreen(),
       ProfileScreen(user: user!),
     ];
 
-    // Icônes avec couleur dynamique selon la page sélectionnée
     final items = [
       Icon(
         Icons.store,
@@ -103,14 +114,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: screens[_pageIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white, // couleur derrière la barre
-        color: const Color(0xFFF27438), // couleur de la barre
-        buttonBackgroundColor: const Color.fromARGB(
-          168,
-          234,
-          92,
-          26,
-        ), // icône sélectionnée
+        backgroundColor: Colors.white,
+        color: const Color(0xFFF27438),
+        buttonBackgroundColor: const Color.fromARGB(168, 234, 92, 26),
         height: 60,
         items: items,
         index: _pageIndex,
