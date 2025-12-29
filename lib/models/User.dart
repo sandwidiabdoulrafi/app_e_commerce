@@ -94,7 +94,7 @@ class User {
       prenom: map['prenom'] ?? '',
       email: map['email'] ?? '',
       telephone: map['telephone'] ?? '',
-      motDePasse: map['motDePasse'] ?? '', // À récupérer séparément pour la sécurité
+      motDePasse: map['motDePasse'] ?? '', 
       imgProfile: map['imgProfile'] ?? '',
     );
   }

@@ -1,3 +1,5 @@
+import 'package:app_e_commerce/models/Panier.dart';
+
 import '../models/produit.dart';
 import '../models/panier_produit_entity.dart';
 import '../database/panier_dao.dart';
@@ -14,6 +16,7 @@ class PanierService {
       produitId: produit.id,
       name: produit.name,
       categorie: produit.categorie,
+      description: produit.description,
       price: produit.price,
       imageUrl: produit.imageUrl,
       quantite: 1,
@@ -43,9 +46,16 @@ class PanierService {
   Future<void> supprimerDuPanier(String produitId) async {
     await _dao.deleteProduit(produitId);
   }
+Future<Panier> getPanierComplet() async {
+  final produits = await getPanier(); // récupère la liste des produits
+  return Panier(
+    id: panierId,
+    produits: produits.map((p) => p.toProduit()).toList(),
+  );
+}
 
   /// Met à jour la quantité d’un produit dans le panier
-  Future<void> mettreAJourQuantite(Produit produit, int quantite) async {
+  Future<void> mettreAJourQuantite(PanierProduitEntity produit, int quantite) async {
     if (quantite < 1) {
       await supprimerDuPanier(produit.id);
       return;
@@ -59,6 +69,7 @@ class PanierService {
         produitId: produitPanier.produitId,
         name: produitPanier.name,
         categorie: produitPanier.categorie,
+        description: produit.description,
         price: produitPanier.price,
         imageUrl: produitPanier.imageUrl,
         quantite: quantite,
@@ -76,12 +87,13 @@ class PanierService {
 
   /// Vérifie si un produit existe déjà dans le panier
   Future<bool> produitExiste(String produitId) async {
+
     final produits = await _dao.getProduits(panierId);
     return produits.any((p) => p.produitId == produitId);
   }
 
   /// Ajoute ou incrémente la quantité d’un produit
-  Future<void> ajouterOuIncrementer(Produit produit) async {
+Future<void> ajouterOuIncrementer(Produit produit) async {
     final existe = await produitExiste(produit.id);
 
     if (existe) {
@@ -94,6 +106,7 @@ class PanierService {
         produitId: produitPanier.produitId,
         name: produitPanier.name,
         categorie: produitPanier.categorie,
+        description: produit.description,
         price: produitPanier.price,
         imageUrl: produitPanier.imageUrl,
         quantite: produitPanier.quantite + 1,

@@ -32,6 +32,13 @@ class _DetailProduitState extends State<DetailProduit> {
         final produitPanier = await _panierService.getProduit(
           widget.produit.id,
         );
+        print(
+          '_-_-__-_-_-_- existance du produit dans le panier : ${existe}',
+        );
+
+                print(
+          '_-_-__-_-_-_-  produit produitPanier : ${produitPanier}',
+        );
         if (produitPanier != null) {
           _quantiteDansPanier = produitPanier.quantite;
         }
@@ -44,13 +51,41 @@ class _DetailProduitState extends State<DetailProduit> {
           _loading = false;
         });
       }
-    } catch (e) {
+    } catch (e,  stackTrace) {
+
+        print('❌ Erreur vérification panier : $e');
+        print(stackTrace);
       if (mounted) {
         setState(() => _loading = false);
+        print(
+          'erreur lor de la verification du produit dans le panier : ${mounted}',
+        );
         _afficherErreur('Erreur lors de la vérification du panier');
       }
     }
   }
+  Future<void> _mettreAJourQuantite(int nouvelleQuantite) async {
+  try {
+    // Récupère le produit existant dans le panier
+    final produitPanier = await _panierService.getProduit(widget.produit.id);
+    if (produitPanier != null) {
+      // Crée une copie avec la nouvelle quantité
+      final produitMaj = produitPanier.copyWith(quantite: nouvelleQuantite);
+      // Appelle le service pour mettre à jour la quantité
+      await _panierService.mettreAJourQuantite(produitMaj, nouvelleQuantite);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${widget.produit.name} mis à jour dans le panier'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  } catch (e) {
+    _afficherErreur('Erreur lors de la mise à jour du panier');
+  }
+}
+
 
   Future<void> _ajouterAuPanier() async {
     if (_ajoutEnCours) return;
@@ -65,19 +100,19 @@ class _DetailProduitState extends State<DetailProduit> {
           quantite: _quantiteChoisie,
         );
         await _panierService.ajouterOuIncrementer(produitAvecQuantite);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${widget.produit.name} ajouté au panier'),
             duration: const Duration(seconds: 2),
           ),
         );
-      } 
+      }
       // Si le produit est déjà dans le panier, on met à jour la quantité
       else {
         await _mettreAJourQuantite(_quantiteChoisie);
       }
-      
+
       await _verifierPanier();
     } catch (e) {
       _afficherErreur('Impossible d\'ajouter le produit au panier');
@@ -88,44 +123,12 @@ class _DetailProduitState extends State<DetailProduit> {
     }
   }
 
-  Future<void> _mettreAJourQuantite(int nouvelleQuantite) async {
-    if (nouvelleQuantite < 1 || nouvelleQuantite > widget.produit.quantite) {
-      return;
-    }
-
-    try {
-      // Créer une copie du produit avec la nouvelle quantité
-      final produitMisAJour = widget.produit.copyWith(
-        quantite: nouvelleQuantite,
-      );
-      
-      if (nouvelleQuantite == 0) {
-        await _panierService.supprimerDuPanier(widget.produit.id);
-      } else {
-
-        await _panierService.mettreAJourQuantite(produitMisAJour, nouvelleQuantite);
-      }
-      
-      await _verifierPanier();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Quantité mise à jour'),
-          duration: Duration(seconds: 1),
-        ),
-      );
-    } catch (e) {
-      _afficherErreur('Erreur lors de la mise à jour de la quantité');
-    }
-  }
 
   void _incrementerQuantite() {
     if (_quantiteChoisie < widget.produit.quantite) {
       final nouvelleQuantite = _quantiteChoisie + 1;
       setState(() => _quantiteChoisie = nouvelleQuantite);
-      // if (_estDansPanier) {
-      //   _mettreAJourQuantite(nouvelleQuantite);
-      // }
+    
     }
   }
 
@@ -133,18 +136,12 @@ class _DetailProduitState extends State<DetailProduit> {
     if (_quantiteChoisie > 1) {
       final nouvelleQuantite = _quantiteChoisie - 1;
       setState(() => _quantiteChoisie = nouvelleQuantite);
-      // if (_estDansPanier) {
-      //   _mettreAJourQuantite(nouvelleQuantite);
-      // }
     }
   }
 
   void _afficherErreur(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message), 
-        backgroundColor: Colors.red
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
@@ -156,11 +153,7 @@ class _DetailProduitState extends State<DetailProduit> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          produit.name, 
-          maxLines: 1, 
-          overflow: TextOverflow.ellipsis
-        ),
+        title: Text(produit.name, maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -308,9 +301,9 @@ class _DetailProduitState extends State<DetailProduit> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _estDansPanier 
-                            ? 'Quantité dans le panier' 
-                            : 'Choisir la quantité',
+                          _estDansPanier
+                              ? 'Quantité dans le panier'
+                              : 'Choisir la quantité',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -350,9 +343,9 @@ class _DetailProduitState extends State<DetailProduit> {
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Calcul du total
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -380,9 +373,9 @@ class _DetailProduitState extends State<DetailProduit> {
                             ],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 8),
-                        
+
                         // Indication de stock
                         Text(
                           'Stock disponible : ${produit.quantite} unités',
@@ -421,8 +414,8 @@ class _DetailProduitState extends State<DetailProduit> {
                               _estDansPanier
                                   ? 'Mettre à jour le panier'
                                   : produit.quantite > 0
-                                      ? 'Ajouter au panier'
-                                      : 'Rupture de stock',
+                                  ? 'Ajouter au panier'
+                                  : 'Rupture de stock',
                             ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 18),
@@ -462,21 +455,22 @@ class _BoutonQuantite extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: theme.dividerColor),
         borderRadius: BorderRadius.only(
-          topLeft: icon == Icons.remove ? const Radius.circular(8) : Radius.zero,
-          bottomLeft: icon == Icons.remove ? const Radius.circular(8) : Radius.zero,
+          topLeft: icon == Icons.remove
+              ? const Radius.circular(8)
+              : Radius.zero,
+          bottomLeft: icon == Icons.remove
+              ? const Radius.circular(8)
+              : Radius.zero,
           topRight: icon == Icons.add ? const Radius.circular(8) : Radius.zero,
-          bottomRight: icon == Icons.add ? const Radius.circular(8) : Radius.zero,
+          bottomRight: icon == Icons.add
+              ? const Radius.circular(8)
+              : Radius.zero,
         ),
       ),
       child: IconButton(
-        icon: Icon(
-          icon, 
-          color: disabled ? Colors.grey : theme.primaryColor
-        ),
+        icon: Icon(icon, color: disabled ? Colors.grey : theme.primaryColor),
         onPressed: disabled ? null : onPressed,
-        style: IconButton.styleFrom(
-          shape: const RoundedRectangleBorder()
-        ),
+        style: IconButton.styleFrom(shape: const RoundedRectangleBorder()),
       ),
     );
   }

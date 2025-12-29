@@ -2,7 +2,7 @@ import 'package:app_e_commerce/commande_screen.dart';
 import 'package:app_e_commerce/database/app_database.dart';
 import 'package:app_e_commerce/database/user_dao.dart';
 import 'package:app_e_commerce/marketplace_screen.dart';
-import 'package:app_e_commerce/models/User.dart';
+import 'package:app_e_commerce/models/user.dart';
 import 'package:app_e_commerce/panier_screen.dart';
 import 'package:app_e_commerce/profile_screen.dart';
 import 'package:flutter/material.dart';

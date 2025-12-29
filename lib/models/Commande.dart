@@ -1,75 +1,73 @@
-import '../../models/produit.dart';
+
+import 'package:app_e_commerce/models/produit_commande_entity.dart';
+import 'package:uuid/uuid.dart';
 import '../../models/user.dart';
+import 'Panier.dart';
 
 class Commande {
-  // Attributs privés
-  String _id;
-  User _client;
-  List<Produit> _produits;
-  DateTime _date;
-  String _statut; // par exemple: "en cours", "livrée", "annulée"
+  String id;
+  User client;
+  List<ProduitCommandeEntity> produits;
+  DateTime date;
+  String statut;
 
-  // Constructeur
   Commande({
-    required String id,
-    required User client,
-    required List<Produit> produits,
+    required this.id,
+    required this.client,
+    required this.produits,
     DateTime? date,
-    String statut = 'en cours',
-  }) : _id = id,
-        _client = client,
-        _produits = produits,
-        _date = date ?? DateTime.now(),
-        _statut = statut;
+    this.statut = 'en cours',
+  }) : date = date ?? DateTime.now();
 
-  // Getters
-  String get id => _id;
-  User get client => _client;
-  List<Produit> get produits => _produits;
-  DateTime get date => _date;
-  String get statut => _statut;
-
-  // Setters
-  set id(String value) => _id = value;
-  set client(User value) => _client = value;
-  set produits(List<Produit> value) => _produits = value;
-  set date(DateTime value) => _date = value;
-  set statut(String value) => _statut = value;
-
-  // Méthode pour calculer le total
+  /// Total de la commande
   double get total {
-    double somme = 0;
-    for (var produit in _produits) {
-      somme += produit.price * produit.quantite;
-    }
-    return somme;
+    return produits.fold(
+      0,
+      (somme, p) => somme + (p.price * p.quantite),
+    );
   }
 
-  // Ajouter un produit à la commande
-  void ajouterProduit(Produit produit) {
-    final index = _produits.indexWhere((p) => p.id == produit.id);
-    if (index != -1) {
-      _produits[index].ajouterQuantite(produit.quantite);
-    } else {
-      _produits.add(produit);
-    }
+  /// Ajouter les produits du panier à la commande
+  void ajouterPanierDansCommande(Panier panier) {
+    produits.clear();
+    produits.addAll(
+    panier.produits.map(
+      (p) => ProduitCommandeEntity(
+        id: const Uuid().v4(),
+        commandeId: id,
+        panierId: panier.id ,
+        produitId: p.id,
+        name: p.name,
+        description: p.description,
+        categorie: p.categorie,
+        price: p.price,
+        imageUrl: p.imageUrl,
+        quantite: p.quantite,
+        note: p.note,
+      ),
+    ),
+  );
   }
 
-  // Retirer un produit de la commande
-  void retirerProduit(String produitId, [int quantite = 1]) {
-    final index = _produits.indexWhere((p) => p.id == produitId);
-    if (index != -1) {
-      if (_produits[index].quantite > quantite) {
-        _produits[index].retirerQuantite(quantite);
-      } else {
-        _produits.removeAt(index);
-      }
-    }
+
+  /// Vider la commande
+  void viderCommande() {
+    produits.clear();
+  }
+
+  /// Conversion DB
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'client_id': client.id,
+      'date': date.toIso8601String(),
+      'statut': statut,
+      'total': total,
+    };
   }
 
   @override
   String toString() {
-    return 'Commande(id: $_id, client: ${_client.getNomComplet()}, produits: $_produits, total: $total, statut: $_statut, date: $_date)';
+    return 'Commande(id: $id, client: ${client.getNomComplet()}, total: $total, statut: $statut)';
   }
 }
-

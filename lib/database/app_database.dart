@@ -15,7 +15,7 @@ class AppDatabase {
 
     return openDatabase(
       path,
-      version: 1,
+      version: 2, // version supérieure pour gérer l'upgrade
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE panier (
@@ -34,7 +34,8 @@ class AppDatabase {
             price REAL,
             imageUrl TEXT,
             quantite INTEGER,
-            note REAL
+            note REAL,
+            description TEXT
           )
         ''');
 
@@ -46,10 +47,44 @@ class AppDatabase {
             email TEXT,
             telephone TEXT,
             motDePasse TEXT,
-            imgProfile TEXT,
+            imgProfile TEXT
           )
-          
-          ''');
+        ''');
+
+        await db.execute('''
+          CREATE TABLE commande (
+            id TEXT PRIMARY KEY,
+            client_id TEXT,
+            date INTEGER,
+            statut TEXT,
+            total REAL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE produit_commande (
+            id TEXT PRIMARY KEY,
+            commande_id TEXT,
+            panier_id TEXT,
+            produit_id TEXT,
+            name TEXT,
+            description TEXT,
+            categorie TEXT,
+            price REAL,
+            image_url TEXT,
+            quantite INTEGER,
+            note REAL
+          )
+        ''');
+
+
+      },
+      
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+            'ALTER TABLE panier_produit ADD COLUMN description TEXT'
+          );
+        }
       },
     );
   }

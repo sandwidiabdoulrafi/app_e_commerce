@@ -1,5 +1,5 @@
 import 'package:app_e_commerce/database/app_database.dart';
-import 'package:app_e_commerce/models/User.dart';
+import 'package:app_e_commerce/models/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class UserDao {
