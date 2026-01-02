@@ -67,6 +67,18 @@ class CommandeDao {
     );
   }
 
+  Future<int> getNextNumero() async {
+    final db = await AppDatabase.database;
+    final res = await db.rawQuery(
+      'SELECT MAX(numero) as max_numero FROM commande',
+    );
+    final dynamic rawMax = res.isNotEmpty ? res.first['max_numero'] : null;
+    final int maxNumero = rawMax is int
+        ? rawMax
+        : (int.tryParse(rawMax?.toString() ?? '') ?? 0);
+    return maxNumero + 1;
+  }
+
   /// Supprimer une commande
   Future<void> deleteCommande(String id) async {
     final db = await AppDatabase.database;

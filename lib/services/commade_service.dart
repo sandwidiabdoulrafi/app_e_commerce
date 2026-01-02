@@ -21,6 +21,7 @@ class CommandeService {
     }
 
     final commandeId = _uuid.v4();
+    final numero = await _commandeDao.getNextNumero();
 
     final produitsCommande = panier.produits
         .map(
@@ -42,6 +43,7 @@ class CommandeService {
 
     final commande = Commande(
       id: commandeId,
+      numero: numero,
       client: client,
       produits: produitsCommande,
     );

@@ -4,6 +4,7 @@ import 'package:app_e_commerce/models/user.dart';
 import 'package:app_e_commerce/services/commade_service.dart';
 import 'package:app_e_commerce/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommandeDetailScreen extends StatefulWidget {
   final String commandeId;
@@ -124,7 +125,10 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
     }
   }
 
-  Future<void> _retirerProduit(ProduitCommandeEntity produit) async {
+  Future<void> _retirerProduit(
+    ProduitCommandeEntity produit, {
+    bool fromBottomSheet = false,
+  }) async {
     final ok = await _confirmer(
       titre: 'Retirer le produit',
       message: 'Retirer "${produit.name}" de la commande ?',
@@ -137,7 +141,17 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
         produitCommandeId: produit.id,
       );
 
-      await _refresh();
+      try {
+        await _refresh();
+      } catch (_) {
+        if (!mounted) return;
+        if (fromBottomSheet) {
+          Navigator.pop(context);
+          Navigator.pop(context, true);
+        } else {
+          Navigator.pop(context, true);
+        }
+      }
     } catch (e) {
       _snack('Erreur: $e');
     }
@@ -145,8 +159,9 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
 
   Future<void> _changerQuantite(
     ProduitCommandeEntity produit,
-    int nouvelleQuantite,
-  ) async {
+    int nouvelleQuantite, {
+    bool fromBottomSheet = false,
+  }) async {
     try {
       await _commandeService.changerQuantiteProduit(
         commandeId: widget.commandeId,
@@ -158,12 +173,233 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
         await _refresh();
       } catch (_) {
         if (mounted) {
-          Navigator.pop(context, true);
+          if (fromBottomSheet) {
+            Navigator.pop(context);
+            Navigator.pop(context, true);
+          } else {
+            Navigator.pop(context, true);
+          }
         }
       }
     } catch (e) {
       _snack('Erreur: $e');
     }
+  }
+
+  Future<void> _ouvrirModifierBottomSheet(Commande commande) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        List<ProduitCommandeEntity> produits = List.of(commande.produits);
+        final controllers = <String, TextEditingController>{
+          for (final p in produits)
+            p.id: TextEditingController(text: p.quantite.toString()),
+        };
+
+        Future<void> appliquerQuantite(ProduitCommandeEntity p, int q) async {
+          final int quantite = q < 1 ? 0 : q;
+          if (quantite < 1) {
+            await _retirerProduit(p, fromBottomSheet: true);
+            return;
+          }
+
+          await _changerQuantite(p, quantite, fromBottomSheet: true);
+        }
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 12,
+                right: 12,
+                top: 8,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Modifier commande #${commande.numero}',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Flexible(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: produits.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          final p = produits[index];
+                          final controller = controllers[p.id]!;
+
+                          return Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: SizedBox(
+                                      width: 56,
+                                      height: 56,
+                                      child: _imageProduit(p.imageUrl),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          p.name,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () async {
+                                                final q =
+                                                    (int.tryParse(
+                                                          controller.text,
+                                                        ) ??
+                                                        p.quantite) -
+                                                    1;
+                                                setModalState(() {
+                                                  controller.text =
+                                                      (q < 0 ? 0 : q)
+                                                          .toString();
+                                                });
+                                                await appliquerQuantite(p, q);
+                                              },
+                                              icon: const Icon(
+                                                Icons.remove_circle_outline,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 70,
+                                              child: TextField(
+                                                controller: controller,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                textAlign: TextAlign.center,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                                ],
+                                                onSubmitted: (value) async {
+                                                  final q =
+                                                      int.tryParse(value) ??
+                                                      p.quantite;
+                                                  setModalState(() {
+                                                    controller.text = q
+                                                        .toString();
+                                                  });
+                                                  await appliquerQuantite(p, q);
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () async {
+                                                final q =
+                                                    (int.tryParse(
+                                                          controller.text,
+                                                        ) ??
+                                                        p.quantite) +
+                                                    1;
+                                                setModalState(() {
+                                                  controller.text = q
+                                                      .toString();
+                                                });
+                                                await appliquerQuantite(p, q);
+                                              },
+                                              icon: const Icon(
+                                                Icons.add_circle_outline,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () async {
+                                                final q =
+                                                    int.tryParse(
+                                                      controller.text,
+                                                    ) ??
+                                                    p.quantite;
+                                                setModalState(() {
+                                                  controller.text = q
+                                                      .toString();
+                                                });
+                                                await appliquerQuantite(p, q);
+                                              },
+                                              icon: const Icon(Icons.check),
+                                            ),
+                                            const Spacer(),
+                                            IconButton(
+                                              onPressed: () async {
+                                                await _retirerProduit(
+                                                  p,
+                                                  fromBottomSheet: true,
+                                                );
+                                                setModalState(() {
+                                                  produits = produits
+                                                      .where(
+                                                        (x) => x.id != p.id,
+                                                      )
+                                                      .toList();
+                                                  controllers.remove(p.id);
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.delete_outline,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Fermer'),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Widget _imageProduit(String imageUrl) {
@@ -264,6 +500,26 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Commande #${commande.numero}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: isAnnulee
+                                  ? null
+                                  : () => _ouvrirModifierBottomSheet(commande),
+                              icon: const Icon(Icons.edit_outlined),
+                              label: const Text('Modifier'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
                         Text(
                           'Client: ${commande.client.getNomComplet()}',
                           style: const TextStyle(fontWeight: FontWeight.w600),
@@ -344,45 +600,11 @@ class _CommandeDetailScreenState extends State<CommandeDetailScreen> {
                                   ),
                                 ],
                                 const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: isAnnulee
-                                          ? null
-                                          : () => _changerQuantite(
-                                              p,
-                                              p.quantite - 1,
-                                            ),
-                                      icon: const Icon(
-                                        Icons.remove_circle_outline,
-                                      ),
-                                    ),
-                                    Text(
-                                      p.quantite.toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: isAnnulee
-                                          ? null
-                                          : () => _changerQuantite(
-                                              p,
-                                              p.quantite + 1,
-                                            ),
-                                      icon: const Icon(
-                                        Icons.add_circle_outline,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    TextButton.icon(
-                                      onPressed: isAnnulee
-                                          ? null
-                                          : () => _retirerProduit(p),
-                                      icon: const Icon(Icons.delete_outline),
-                                      label: const Text('Retirer'),
-                                    ),
-                                  ],
+                                Text(
+                                  'Quantité: ${p.quantite}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),

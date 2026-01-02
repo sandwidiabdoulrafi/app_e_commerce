@@ -5,6 +5,7 @@ import 'Panier.dart';
 
 class Commande {
   String id;
+  int numero;
   User client;
   List<ProduitCommandeEntity> produits;
   int date;
@@ -12,6 +13,7 @@ class Commande {
 
   Commande({
     required this.id,
+    required this.numero,
     required this.client,
     required this.produits,
     int? date,
@@ -54,6 +56,7 @@ class Commande {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'numero': numero,
       'client_id': client.id,
       'date': date,
       'statut': statut,
@@ -66,6 +69,11 @@ class Commande {
     required User client,
     List<ProduitCommandeEntity>? produits,
   }) {
+    final dynamic rawNumero = map['numero'];
+    final int parsedNumero = rawNumero is int
+        ? rawNumero
+        : (int.tryParse(rawNumero?.toString() ?? '') ?? 0);
+
     final dynamic rawDate = map['date'];
     final int parsedDate = rawDate is int
         ? rawDate
@@ -77,6 +85,7 @@ class Commande {
 
     return Commande(
       id: map['id']?.toString() ?? '',
+      numero: parsedNumero,
       client: client,
       produits: produits ?? <ProduitCommandeEntity>[],
       date: parsedDate,

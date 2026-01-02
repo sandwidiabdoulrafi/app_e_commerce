@@ -15,7 +15,7 @@ class AppDatabase {
 
     return openDatabase(
       path,
-      version: 2, // version supérieure pour gérer l'upgrade
+      version: 3, // version supérieure pour gérer l'upgrade
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE panier (
@@ -54,6 +54,7 @@ class AppDatabase {
         await db.execute('''
           CREATE TABLE commande (
             id TEXT PRIMARY KEY,
+            numero INTEGER UNIQUE,
             client_id TEXT,
             date INTEGER,
             statut TEXT,
@@ -76,13 +77,41 @@ class AppDatabase {
           )
         ''');
 
-
+        await db.execute(
+          'CREATE UNIQUE INDEX IF NOT EXISTS idx_commande_numero ON commande(numero)',
+        );
       },
-      
+
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           await db.execute(
-            'ALTER TABLE panier_produit ADD COLUMN description TEXT'
+            'ALTER TABLE panier_produit ADD COLUMN description TEXT',
+          );
+        }
+
+        if (oldVersion < 3) {
+          await db.execute('ALTER TABLE commande ADD COLUMN numero INTEGER');
+
+          final rows = await db.query(
+            'commande',
+            columns: ['id'],
+            orderBy: 'date ASC',
+          );
+          int numero = 1;
+          for (final row in rows) {
+            final id = row['id']?.toString() ?? '';
+            if (id.isEmpty) continue;
+            await db.update(
+              'commande',
+              {'numero': numero},
+              where: 'id = ?',
+              whereArgs: [id],
+            );
+            numero++;
+          }
+
+          await db.execute(
+            'CREATE UNIQUE INDEX IF NOT EXISTS idx_commande_numero ON commande(numero)',
           );
         }
       },
