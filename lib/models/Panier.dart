@@ -1,13 +1,13 @@
-import 'Produit.dart';
+import 'produit.dart';
 
 class Panier {
   final String id;
   final List<Produit> _produits;
   final DateTime createdAt;
 
-  Panier({required this.id, List<Produit>? produits, DateTime? createdAt,})
-    :  createdAt = createdAt ?? DateTime.now(),
-    _produits = produits ?? [];
+  Panier({required this.id, List<Produit>? produits, DateTime? createdAt})
+    : createdAt = createdAt ?? DateTime.now(),
+      _produits = produits ?? [];
 
   // getter
   List<Produit> get produits => _produits;

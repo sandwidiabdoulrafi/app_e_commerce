@@ -5,7 +5,6 @@ import 'package:app_e_commerce/services/panier_service.dart';
 class CartItemWidget extends StatefulWidget {
   final PanierProduitEntity produit;
   final VoidCallback onUpdate;
-  
 
   const CartItemWidget({
     super.key,
@@ -22,56 +21,55 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   late int _quantiteAffichee;
   bool _loading = false;
 
-
-    @override
+  @override
   void initState() {
     super.initState();
     _quantiteAffichee = widget.produit.quantite;
   }
 
   Future<void> _incrementerQuantite() async {
-      if (_loading) return;
-      setState(() {
-        _quantiteAffichee++;
-        _loading = true;
-      });
+    if (_loading) return;
+    setState(() {
+      _quantiteAffichee++;
+      _loading = true;
+    });
 
-      try {
-        final produitMaj = widget.produit.copyWith(quantite: _quantiteAffichee);
-        await _panierService.mettreAJourQuantite(produitMaj, _quantiteAffichee);
-        widget.onUpdate();
-      } catch (e) {
-        _afficherMessage('Erreur lors de la mise à jour');
-        setState(() => _quantiteAffichee--);
-      } finally {
-        if (mounted) setState(() => _loading = false);
-      }
+    try {
+      final produitMaj = widget.produit.copyWith(quantite: _quantiteAffichee);
+      await _panierService.mettreAJourQuantite(produitMaj, _quantiteAffichee);
+      widget.onUpdate();
+    } catch (e) {
+      _afficherMessage('Erreur lors de la mise à jour');
+      setState(() => _quantiteAffichee--);
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _decrementer() async {
+    if (_loading) return;
+
+    if (_quantiteAffichee <= 1) {
+      _confirmerSuppression();
+      return;
     }
 
-    Future<void> _decrementer() async {
-      if (_loading) return;
+    setState(() {
+      _quantiteAffichee--;
+      _loading = true;
+    });
 
-      if (_quantiteAffichee <= 1) {
-        _confirmerSuppression();
-        return;
-      }
-
-      setState(() {
-        _quantiteAffichee--;
-        _loading = true;
-      });
-
-      try {
-        final produitMaj = widget.produit.copyWith(quantite: _quantiteAffichee);
-        await _panierService.mettreAJourQuantite(produitMaj, _quantiteAffichee);
-        widget.onUpdate();
-      } catch (e) {
-        _afficherMessage('Erreur lors de la mise à jour');
-        setState(() => _quantiteAffichee++); 
-      } finally {
-        if (mounted) setState(() => _loading = false);
-      }
+    try {
+      final produitMaj = widget.produit.copyWith(quantite: _quantiteAffichee);
+      await _panierService.mettreAJourQuantite(produitMaj, _quantiteAffichee);
+      widget.onUpdate();
+    } catch (e) {
+      _afficherMessage('Erreur lors de la mise à jour');
+      setState(() => _quantiteAffichee++);
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
+  }
 
   Future<void> _confirmerSuppression() async {
     final confirme = await showDialog<bool>(
@@ -125,7 +123,6 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final total = widget.produit.price * widget.produit.quantite;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

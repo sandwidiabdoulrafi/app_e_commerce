@@ -1,6 +1,5 @@
 import 'package:app_e_commerce/models/panier_produit_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:app_e_commerce/models/produit.dart';
 
 class CartSummaryWidget extends StatelessWidget {
   final List<PanierProduitEntity> produits;
@@ -29,10 +28,7 @@ class CartSummaryWidget extends StatelessWidget {
   }
 
   int get _nombreArticles {
-    return produits.fold(
-      0,
-      (total, produit) => total + produit.quantite,
-    );
+    return produits.fold(0, (total, produit) => total + produit.quantite);
   }
 
   @override

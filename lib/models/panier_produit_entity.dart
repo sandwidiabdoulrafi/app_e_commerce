@@ -1,5 +1,4 @@
-import 'package:app_e_commerce/models/Produit.dart';
-import 'package:app_e_commerce/models/Produit.dart';
+import 'package:app_e_commerce/models/produit.dart';
 
 class PanierProduitEntity {
   final String id;
@@ -24,7 +23,6 @@ class PanierProduitEntity {
     required this.imageUrl,
     required this.quantite,
     required this.note,
-    
   });
 
   Map<String, dynamic> toMap() => {
@@ -40,23 +38,22 @@ class PanierProduitEntity {
     'note': note,
   };
 
-
   factory PanierProduitEntity.fromMap(Map<String, dynamic> map) {
-  return PanierProduitEntity(
-    id: map['id']?.toString() ?? '',
-    panierId: map['panier_id']?.toString() ?? '',
-    produitId: map['produit_id']?.toString() ?? '',
-    name: map['name']?.toString() ?? '',
-    categorie: map['categorie']?.toString() ?? '',
-    description: map['description']?.toString() ?? '',
-    price: (map['price'] as num?)?.toDouble() ?? 0.0,
-    imageUrl: map['imageUrl']?.toString() ?? '',
-    quantite: map['quantite'] is int
-        ? map['quantite']
-        : int.tryParse(map['quantite']?.toString() ?? '1') ?? 1,
-    note: (map['note'] as num?)?.toDouble() ?? 0.0,
-  );
-}
+    return PanierProduitEntity(
+      id: map['id']?.toString() ?? '',
+      panierId: map['panier_id']?.toString() ?? '',
+      produitId: map['produit_id']?.toString() ?? '',
+      name: map['name']?.toString() ?? '',
+      categorie: map['categorie']?.toString() ?? '',
+      description: map['description']?.toString() ?? '',
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
+      imageUrl: map['imageUrl']?.toString() ?? '',
+      quantite: map['quantite'] is int
+          ? map['quantite']
+          : int.tryParse(map['quantite']?.toString() ?? '1') ?? 1,
+      note: (map['note'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
   PanierProduitEntity copyWith({
     String? id,
     String? panierId,
@@ -82,9 +79,7 @@ class PanierProduitEntity {
       note: note ?? this.note,
     );
   }
-
 }
-
 
 /// Extension pour convertir PanierProduitEntity en Produit
 extension PanierProduitExtension on PanierProduitEntity {

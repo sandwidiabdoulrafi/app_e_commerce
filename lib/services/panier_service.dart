@@ -41,43 +41,30 @@ class PanierService {
     }
   }
 
-
   /// Supprime un produit du panier
   Future<void> supprimerDuPanier(String produitId) async {
     await _dao.deleteProduit(produitId);
   }
-Future<Panier> getPanierComplet() async {
-  final produits = await getPanier(); // récupère la liste des produits
-  return Panier(
-    id: panierId,
-    produits: produits.map((p) => p.toProduit()).toList(),
-  );
-}
+
+  Future<Panier> getPanierComplet() async {
+    final produits = await getPanier(); // récupère la liste des produits
+    return Panier(
+      id: panierId,
+      produits: produits.map((p) => p.toProduit()).toList(),
+    );
+  }
 
   /// Met à jour la quantité d’un produit dans le panier
-  Future<void> mettreAJourQuantite(PanierProduitEntity produit, int quantite) async {
+  Future<void> mettreAJourQuantite(
+    PanierProduitEntity produit,
+    int quantite,
+  ) async {
     if (quantite < 1) {
       await supprimerDuPanier(produit.id);
       return;
     }
 
-    final produitPanier = await getProduit(produit.id);
-    if (produitPanier != null) {
-      final updated = PanierProduitEntity(
-        id: produitPanier.id,
-        panierId: produitPanier.panierId,
-        produitId: produitPanier.produitId,
-        name: produitPanier.name,
-        categorie: produitPanier.categorie,
-        description: produit.description,
-        price: produitPanier.price,
-        imageUrl: produitPanier.imageUrl,
-        quantite: quantite,
-        note: produitPanier.note,
-      );
-
-      await _dao.insertProduit(updated);
-    }
+    await _dao.insertProduit(produit.copyWith(quantite: quantite));
   }
 
   /// Vide le panier complet
@@ -87,18 +74,18 @@ Future<Panier> getPanierComplet() async {
 
   /// Vérifie si un produit existe déjà dans le panier
   Future<bool> produitExiste(String produitId) async {
-
     final produits = await _dao.getProduits(panierId);
     return produits.any((p) => p.produitId == produitId);
   }
 
   /// Ajoute ou incrémente la quantité d’un produit
-Future<void> ajouterOuIncrementer(Produit produit) async {
+  Future<void> ajouterOuIncrementer(Produit produit) async {
     final existe = await produitExiste(produit.id);
 
     if (existe) {
-      final produitPanier = (await _dao.getProduits(panierId))
-          .firstWhere((p) => p.produitId == produit.id);
+      final produitPanier = (await _dao.getProduits(
+        panierId,
+      )).firstWhere((p) => p.produitId == produit.id);
 
       final updated = PanierProduitEntity(
         id: produitPanier.id,

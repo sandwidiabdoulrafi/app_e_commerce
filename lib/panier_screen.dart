@@ -1,9 +1,9 @@
-import 'package:app_e_commerce/marketplace_screen.dart';
 import 'package:app_e_commerce/models/user.dart';
 import 'package:app_e_commerce/services/user_service.dart';
 import 'package:app_e_commerce/widgets/panier/cart_item_widget.dart';
 import 'package:app_e_commerce/widgets/panier/cart_summary_widget.dart';
 import 'package:app_e_commerce/widgets/panier/empty_cart_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:app_e_commerce/models/panier_produit_entity.dart';
 import 'package:app_e_commerce/services/panier_service.dart';
@@ -37,8 +37,8 @@ class _PanierScreenState extends State<PanierScreen> {
     setState(() => _loading = true);
 
     try {
-      final List<PanierProduitEntity> panierProduits =
-          await _panierService.getPanier();
+      final List<PanierProduitEntity> panierProduits = await _panierService
+          .getPanier();
 
       if (mounted) {
         setState(() {
@@ -164,33 +164,33 @@ class _PanierScreenState extends State<PanierScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _produitsPanier.isEmpty
-              ? EmptyCartWidget(
-                  onContinuerAchats: widget.onRetourMarketplace, // ← CORRIGÉ
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: _chargerPanier,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.only(top: 8, bottom: 16),
-                          itemCount: _produitsPanier.length,
-                          itemBuilder: (context, index) {
-                            final produit = _produitsPanier[index];
-                            return CartItemWidget(
-                              produit: produit,
-                              onUpdate: _chargerPanier,
-                            );
-                          },
-                        ),
-                      ),
+          ? EmptyCartWidget(
+              onContinuerAchats: widget.onRetourMarketplace, // ← CORRIGÉ
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _chargerPanier,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 8, bottom: 16),
+                      itemCount: _produitsPanier.length,
+                      itemBuilder: (context, index) {
+                        final produit = _produitsPanier[index];
+                        return CartItemWidget(
+                          produit: produit,
+                          onUpdate: _chargerPanier,
+                        );
+                      },
                     ),
-                    CartSummaryWidget(
-                      produits: _produitsPanier,
-                      onCommander: _passerCommande,
-                    ),
-                  ],
+                  ),
                 ),
+                CartSummaryWidget(
+                  produits: _produitsPanier,
+                  onCommander: _passerCommande,
+                ),
+              ],
+            ),
     );
   }
 }

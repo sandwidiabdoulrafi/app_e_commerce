@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:app_e_commerce/models/Commande.dart';
+import 'package:app_e_commerce/models/user.dart';
+import 'package:app_e_commerce/services/commade_service.dart';
+import 'package:app_e_commerce/services/user_service.dart';
+import 'package:app_e_commerce/commande_detail_screen.dart';
 
 class CommandeScreen extends StatefulWidget {
   const CommandeScreen({super.key});
@@ -8,14 +13,254 @@ class CommandeScreen extends StatefulWidget {
 }
 
 class _CommandeScreenState extends State<CommandeScreen> {
+  final CommandeService _commandeService = CommandeService();
+  final UserService _userService = UserService();
+
+  late Future<List<Commande>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _chargerCommandes();
+  }
+
+  // Charger les commandes
+  Future<List<Commande>> _chargerCommandes() async {
+    final User? client = await _userService.getUtilisateurParId('12345');
+    if (client == null) {
+      throw Exception('Utilisateur non trouvé');
+    }
+
+    return _commandeService.getCommandesPourClient(client: client);
+  }
+
+  // Raafraichissement de l'ecran apres actualisation de la bdd
+  Future<void> _refresh() async {
+    setState(() {
+      _future = _chargerCommandes();
+    });
+    await _future;
+  }
+
+  Future<bool> _confirmer({
+    required String titre,
+    required String message,
+  }) async {
+    final res = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(titre),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Confirmer'),
+          ),
+        ],
+      ),
+    );
+    return res == true;
+  }
+
+  Widget _leadingImage(Commande commande) {
+    final imageUrl = commande.produits.isNotEmpty
+        ? commande.produits.first.imageUrl
+        : '';
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: SizedBox(
+        width: 54,
+        height: 54,
+        child: imageUrl.isEmpty
+            ? Container(
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.image_not_supported_outlined),
+              )
+            : Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.broken_image_outlined),
+                  );
+                },
+              ),
+      ),
+    );
+  }
+
+  Future<void> _ouvrirDetails(Commande commande) async {
+    final res = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CommandeDetailScreen(commandeId: commande.id),
+      ),
+    );
+
+    if (res == true) {
+      await _refresh();
+    }
+  }
+
+  Future<void> _annuler(Commande commande) async {
+    final ok = await _confirmer(
+      titre: 'Annuler la commande',
+      message: 'Voulez-vous annuler cette commande ?',
+    );
+    if (!ok) return;
+
+    try {
+      await _commandeService.annulerCommande(commandeId: commande.id);
+      await _refresh();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erreur: $e')));
+    }
+  }
+
+  Future<void> _supprimer(Commande commande) async {
+    final ok = await _confirmer(
+      titre: 'Supprimer la commande',
+      message: 'Supprimer définitivement cette commande ?',
+    );
+    if (!ok) return;
+
+    try {
+      await _commandeService.supprimerCommande(commandeId: commande.id);
+      await _refresh();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erreur: $e')));
+    }
+  }
+
+  String _formatDate(int epochMs) {
+    final dt = DateTime.fromMillisecondsSinceEpoch(epochMs).toLocal();
+    final y = dt.year.toString().padLeft(4, '0');
+    final m = dt.month.toString().padLeft(2, '0');
+    final d = dt.day.toString().padLeft(2, '0');
+    final hh = dt.hour.toString().padLeft(2, '0');
+    final mm = dt.minute.toString().padLeft(2, '0');
+    return '$y-$m-$d $hh:$mm';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Commandes'),
-      ),
-      body: const Center(
-        child: Text('Liste des commandes apparaîtra ici'),
+      appBar: AppBar(title: const Text('Commandes')),
+      body: FutureBuilder<List<Commande>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Erreur lors du chargement des commandes'),
+                    const SizedBox(height: 8),
+                    Text(
+                      snapshot.error.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _refresh,
+                      child: const Text('Réessayer'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final commandes = snapshot.data ?? <Commande>[];
+
+          if (commandes.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: _refresh,
+              child: ListView(
+                children: const [
+                  SizedBox(height: 200),
+                  Center(child: Text('Aucune commande pour le moment')),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.separated(
+              padding: const EdgeInsets.all(12),
+              itemCount: commandes.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final commande = commandes[index];
+                return Card(
+                  child: ListTile(
+                    onTap: () => _ouvrirDetails(commande),
+                    leading: _leadingImage(commande),
+                    title: Text('Commande ${commande.id.substring(0, 8)}'),
+                    subtitle: Text(
+                      '${_formatDate(commande.date)}\n${commande.produits.length} article(s) • Statut: ${commande.statut}',
+                    ),
+                    isThreeLine: true,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${commande.total.toStringAsFixed(0)} FCFA',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        PopupMenuButton<String>(
+                          onSelected: (value) {
+                            if (value == 'details') {
+                              _ouvrirDetails(commande);
+                            } else if (value == 'annuler') {
+                              _annuler(commande);
+                            } else if (value == 'supprimer') {
+                              _supprimer(commande);
+                            }
+                          },
+                          itemBuilder: (context) => const [
+                            PopupMenuItem(
+                              value: 'details',
+                              child: Text('Détails'),
+                            ),
+                            PopupMenuItem(
+                              value: 'annuler',
+                              child: Text('Annuler'),
+                            ),
+                            PopupMenuItem(
+                              value: 'supprimer',
+                              child: Text('Supprimer'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -14,7 +14,7 @@ class ProduitCommandeEntity {
   ProduitCommandeEntity({
     required this.id,
     required this.commandeId,
-  required this.panierId,
+    required this.panierId,
     required this.produitId,
     required this.name,
     required this.description,
@@ -23,7 +23,7 @@ class ProduitCommandeEntity {
     required this.imageUrl,
     required this.quantite,
     required this.note,
-});
+  });
 
   Map<String, dynamic> toMap() => {
     'id': id,
@@ -52,6 +52,34 @@ class ProduitCommandeEntity {
       imageUrl: map['image_url'],
       quantite: map['quantite'],
       note: (map['note'] as num).toDouble(),
+    );
+  }
+
+  ProduitCommandeEntity copyWith({
+    String? id,
+    String? commandeId,
+    String? panierId,
+    String? produitId,
+    String? name,
+    String? description,
+    String? categorie,
+    double? price,
+    String? imageUrl,
+    int? quantite,
+    double? note,
+  }) {
+    return ProduitCommandeEntity(
+      id: id ?? this.id,
+      commandeId: commandeId ?? this.commandeId,
+      panierId: panierId ?? this.panierId,
+      produitId: produitId ?? this.produitId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      categorie: categorie ?? this.categorie,
+      price: price ?? this.price,
+      imageUrl: imageUrl ?? this.imageUrl,
+      quantite: quantite ?? this.quantite,
+      note: note ?? this.note,
     );
   }
 
