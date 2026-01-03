@@ -50,9 +50,9 @@ class _HomePageState extends State<HomePage> {
     userDao = UserDao();
     User tempUser = User(
       id: '12345',
-      nom: 'Sandwidi',
-      prenom: 'Abdoul Rafi',
-      email: 'rafi@un_virt_bf.com',
+      nom: 'Univerité',
+      prenom: 'Virtuelle',
+      email: 'universitevirtuelle@un_virt_bf.com',
       telephone: '+226 010212345',
       motDePasse: 'password123',
       imgProfile:
