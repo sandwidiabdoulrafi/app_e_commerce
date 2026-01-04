@@ -3,18 +3,18 @@ import 'package:app_e_commerce/services/user_service.dart';
 import 'package:app_e_commerce/widgets/panier/cart_item_widget.dart';
 import 'package:app_e_commerce/widgets/panier/cart_summary_widget.dart';
 import 'package:app_e_commerce/widgets/panier/empty_cart_widget.dart';
-
 import 'package:flutter/material.dart';
 import 'package:app_e_commerce/models/panier_produit_entity.dart';
 import 'package:app_e_commerce/services/panier_service.dart';
 import 'package:app_e_commerce/services/commade_service.dart';
+import 'package:app_e_commerce/payment_screen.dart'; // ← IMPORT CORRIGÉ
 
 class PanierScreen extends StatefulWidget {
-  final VoidCallback? onRetourMarketplace; // ← AJOUTÉ
+  final VoidCallback? onRetourMarketplace;
 
   const PanierScreen({
     super.key,
-    this.onRetourMarketplace, // ← AJOUTÉ
+    this.onRetourMarketplace,
   });
 
   @override
@@ -23,7 +23,7 @@ class PanierScreen extends StatefulWidget {
 
 class _PanierScreenState extends State<PanierScreen> {
   final PanierService _panierService = PanierService();
-  late CommandeService commandeService = CommandeService();
+  final CommandeService _commandeService = CommandeService(); // ← CORRIGÉ (enlevé late)
   List<PanierProduitEntity> _produitsPanier = [];
   bool _loading = true;
 
@@ -37,8 +37,8 @@ class _PanierScreenState extends State<PanierScreen> {
     setState(() => _loading = true);
 
     try {
-      final List<PanierProduitEntity> panierProduits = await _panierService
-          .getPanier();
+      final List<PanierProduitEntity> panierProduits = 
+          await _panierService.getPanier();
 
       if (mounted) {
         setState(() {
@@ -95,25 +95,33 @@ class _PanierScreenState extends State<PanierScreen> {
     }
 
     try {
+      // Récupérer le client
       final User? client = await UserService().getUtilisateurParId('12345');
       if (client == null) {
         _afficherMessage('Utilisateur non trouvé. Veuillez vous connecter.');
         return;
       }
 
+      // Récupérer le panier complet
       final panier = await _panierService.getPanierComplet();
 
-      await commandeService.creerCommandeDepuisPanier(
-        client: client,
-        panier: panier,
+      // Naviguer vers l'écran de paiement
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentScreen(
+            panier: panier,
+            client: client,
+          ),
+        ),
       );
 
-      await _panierService.viderPanier();
-      setState(() => _produitsPanier.clear());
-
-      _afficherMessage('Commande créée avec succès ✅');
+      // Si le paiement a réussi, recharger le panier (qui sera vide)
+      if (result == true) {
+        await _chargerPanier();
+      }
     } catch (e) {
-      _afficherMessage('Erreur lors de la création de la commande : $e');
+      _afficherMessage('Erreur : $e');
     }
   }
 
@@ -164,33 +172,33 @@ class _PanierScreenState extends State<PanierScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _produitsPanier.isEmpty
-          ? EmptyCartWidget(
-              onContinuerAchats: widget.onRetourMarketplace, // ← CORRIGÉ
-            )
-          : Column(
-              children: [
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _chargerPanier,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(top: 8, bottom: 16),
-                      itemCount: _produitsPanier.length,
-                      itemBuilder: (context, index) {
-                        final produit = _produitsPanier[index];
-                        return CartItemWidget(
-                          produit: produit,
-                          onUpdate: _chargerPanier,
-                        );
-                      },
+              ? EmptyCartWidget(
+                  onContinuerAchats: widget.onRetourMarketplace,
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: _chargerPanier,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(top: 8, bottom: 16),
+                          itemCount: _produitsPanier.length,
+                          itemBuilder: (context, index) {
+                            final produit = _produitsPanier[index];
+                            return CartItemWidget(
+                              produit: produit,
+                              onUpdate: _chargerPanier,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                    CartSummaryWidget(
+                      produits: _produitsPanier,
+                      onCommander: _passerCommande,
+                    ),
+                  ],
                 ),
-                CartSummaryWidget(
-                  produits: _produitsPanier,
-                  onCommander: _passerCommande,
-                ),
-              ],
-            ),
     );
   }
 }
